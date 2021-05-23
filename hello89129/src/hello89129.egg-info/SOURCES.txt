@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+setup.cfg
+src/hello89129/__init__.py
+src/hello89129/cool.py
+src/hello89129/hello.py
+src/hello89129.egg-info/PKG-INFO
+src/hello89129.egg-info/SOURCES.txt
+src/hello89129.egg-info/dependency_links.txt
+src/hello89129.egg-info/top_level.txt
