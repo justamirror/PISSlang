@@ -1,5 +1,8 @@
 li.py
 main.py
+interpreter.py
+pisslang/dist/
+pisslang/src/pisslang.egg-info/
 
 # Created by https://www.toptal.com/developers/gitignore/api/python
 # Edit at https://www.toptal.com/developers/gitignore?templates=python
