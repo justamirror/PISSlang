@@ -5,7 +5,7 @@ def dfie(path):
 from datetime import date
 from li import licenses
 def pkg(**kwargs):
-  filenames = kwargs.get('filenames', [kwargs["filename"]])
+  filenames = kwargs.get('filenames', [kwargs.get("filename", kwargs.get("mainfile"))])
   pkgname = kwargs.get("pkgname", kwargs.get("filename", kwargs.get("mainfile")).replace(".py", ""))
   version = kwargs["version"]
   project = kwargs["project"]
@@ -23,13 +23,13 @@ def pkg(**kwargs):
     name = kwargs["name"]
   today = date.today()
   licence = licenses[kwargs["licence"].lower()].replace("[fullname]", name).replace("[year]", str(today.year))
+  longdes = kwargs.get("longdes", kwargs["des"])
+  shortdes = kwargs.get("shortdes", (longdes[:descutoff] + '..') if len(longdes) > descutoff else longdes)
   dfie(pkgname)
   os.makedirs(f"{pkgname}/src/{pkgname}")
   os.mkdir(f"{pkgname}/tests/")
 
   with open(f"{pkgname}/src/{pkgname}/__init__.py", "w") as i:
-    longdes = kwargs.get("longdes", kwargs["des"])
-    shortdes = kwargs.get("shortdes", (longdes[:descutoff] + '..') if len(longdes) > descutoff else longdes)
     if len(filenames) == 1:
       with open(filenames[0], "r") as f:
         i.write(f.read())
@@ -42,6 +42,7 @@ def pkg(**kwargs):
     rdme.write(longdes)
   with open(f"{pkgname}/LICENCE", "w") as lifile:
     lifile.write(licence)
+  e = "\n"
   with open(f"{pkgname}/pyproject.toml", "w") as pptoml:
     pptoml.write('''[build-system]
 requires = [
@@ -55,7 +56,7 @@ name = {pkgname}
 version = {version}
 author = {name}
 author_email = {email}
-description = {shortdes}
+description = {shortdes.replace(e, " ")}
 long_description = file: README.md
 long_description_content_type = text/markdown
 url = https://github.com/{project}
@@ -84,6 +85,9 @@ where = src
   os.system(f"python3 -m pip install --upgrade build {ending}")
   os.system(f"python3 -m build {pkgname}/ {ending}")
   os.system(f"python3 -m pip install --upgrade twine {ending}")
-  os.system(f"python3 -m twine upload --repository {repo} {pkgname}/dist/* {ending}")
+  os.system(f"python3 -m twine upload --repository {repo} {pkgname}/dist/* --username __token__ --password {os.environ.get('token')} {ending}")
   print(kwargs)
-pkg(mainfile="hello.py", filename='lack.py', pkgname="lack", version='0.0.0.0', name="Just A Mirror", des="Lack is a pseudo programming language. Why did I make it? Because fuck you thats why. Anyyways, docs and examples are at [BLANK: WILL BE UPDATED]", project="cooldude/pp", licence="mit")
+version=input("version: ")
+input("Edit 'deREADME.md' in the replit editor and press enter to conferm.")
+des=open("README.md", "r").read()
+pkg(filename='interpreter.py', pkgname="pisslang", version=version, name="Mirror", des=des, project="justamirror/PISSlang", licence="mit")
